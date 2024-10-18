@@ -1,5 +1,4 @@
 import React from "react";
-import LogoImage from "../../../../public/logo.png";
 
 interface LogoProps {
   logoType: "primary" | "secondary";
@@ -13,7 +12,7 @@ const Logo: React.FC<LogoProps> = ({ logoType, className, title }) => {
   return (
     <div className={`${baseClasses} ${className}`}>
       <img
-        src={LogoImage}
+        src="/logo.png"
         alt={`${logoType} logo`}
         className="w-28 h-28 object-cover"
       />

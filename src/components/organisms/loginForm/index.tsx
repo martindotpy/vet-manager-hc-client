@@ -19,7 +19,7 @@ const LoginForm: React.FC = () => {
           <p className="text-base text-black mb-1 mt-2">Contraseña</p>
           <Input />
         </div>
-        <Button title='Ingresar' />
+        <Button title='Ingresar' buttonType='primary' />
       </div>
     </div>
   );
