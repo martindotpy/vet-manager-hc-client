@@ -7,7 +7,6 @@ const Principal: React.FC = () => {
       <Sidebar />
       <div className="content">
         {/* Main container */}
-        <h1>Jojito</h1>
       </div>
     </div>
   );

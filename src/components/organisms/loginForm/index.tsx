@@ -13,11 +13,11 @@ const LoginForm: React.FC = () => {
         />
         <div>
           <p className="text-base text-black mb-1">Usuario</p>
-          <Input />
+          <Input inputType='text' />
         </div>
         <div>
           <p className="text-base text-black mb-1 mt-2">Contraseña</p>
-          <Input />
+          <Input inputType='password'/>
         </div>
         <Button title='Ingresar' buttonType='primary' />
       </div>
