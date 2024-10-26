@@ -2,6 +2,7 @@ import React from 'react';
 import Logo from '../../atoms/logo';
 import Button from '../../atoms/button';
 import Input from '../../atoms/input';
+import { Link } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
   return (
@@ -19,7 +20,9 @@ const LoginForm: React.FC = () => {
           <p className="text-base text-black mb-1 mt-2">Contraseña</p>
           <Input inputType='password'/>
         </div>
+        <Link to='/principal'> 
         <Button title='Ingresar' buttonType='primary' />
+        </Link>
       </div>
     </div>
   );
