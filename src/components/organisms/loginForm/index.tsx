@@ -20,7 +20,7 @@ const LoginForm: React.FC = () => {
     try {
       await login(email, password);
       console.log("Datos de autenticación:", { email, password });
-      navigate("/principal");
+      navigate("/");
     } catch (error) {
       console.error("Error en el inicio de sesión", error);
       alert("Credenciales incorrectas, intenta de nuevo");

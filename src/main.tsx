@@ -17,7 +17,7 @@ const router = createHashRouter([
     element: <AuthTemplate />,
     children: [
       {
-        path: "principal",
+        path: "",
         element: <Principal />,
       },
     ],
