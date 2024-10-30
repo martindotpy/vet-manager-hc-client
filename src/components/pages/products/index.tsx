@@ -28,7 +28,7 @@ interface Product {
 const initialProducts: Product[] = [
   { id: 1, name: "Producto A", price: 18.2, stock: 5, category: "Categoria 1" },
   { id: 2, name: "Producto B", price: 20.0, stock: 8, category: "Categoria 2" },
-  { id: 3, name: "Producto C", price: 22.5, stock: 3, category: "Categoria 3" , description: "Descripcion del producto C"},
+  { id: 3, name: "Producto C", price: 22.5, stock: 3, category: "Categoria 3", description: "Descripcion del producto C" },
 ];
 
 export default function ProductsPage() {
