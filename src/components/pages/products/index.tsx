@@ -22,6 +22,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
+
 interface Product {
   id: number;
   name: string;
