@@ -1,23 +1,28 @@
-import React from 'react';
-import AppointmentPage from '../../pages/appointment';
-import ProductsPage from '../../pages/products';
-import RecordPage from '../../pages/record';
-import SalesPage from '../../pages/sales';
+import React from "react";
+import AppointmentPage from "../../pages/appointment";
+import ProductsPage from "../../pages/products";
+import RecordPage from "../../pages/record";
+import SalesPage from "../../pages/sales";
+import ClientsPage from "../../pages/clients";
 
 interface ContentSwitcherProps {
   selectedScreen: string;
 }
 
-const ContentSwitcher: React.FC<ContentSwitcherProps> = ({ selectedScreen }) => {
+const ContentSwitcher: React.FC<ContentSwitcherProps> = ({
+  selectedScreen,
+}) => {
   switch (selectedScreen) {
-    case 'Products':
+    case "Products":
       return <ProductsPage />;
-    case 'Appointments':
+    case "Appointments":
       return <AppointmentPage />;
-    case 'Record':
+    case "Record":
       return <RecordPage />;
-    case 'Sales':
+    case "Sales":
       return <SalesPage />;
+    case "Clients":
+      return <ClientsPage />;
     default:
       return <div>Escoge una sección</div>;
   }
