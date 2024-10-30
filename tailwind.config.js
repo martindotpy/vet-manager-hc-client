@@ -1,16 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      colors:{
-        'primary': '#66B4C1',
-        'secondary':'#94B9C7',
-        'accent': '#2A5594'
-      }
+      colors: {
+        primary: "#66B4C1",
+        secondary: "#94B9C7",
+        accent: "#2A5594",
+      },
+      fontFamily: {
+        roboto: ["Roboto", "sans-serif"],
+        inter: ["Inter", "sans-serif"],
+      },
     },
   },
   plugins: [],
