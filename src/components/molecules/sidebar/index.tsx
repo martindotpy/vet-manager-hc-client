@@ -9,13 +9,23 @@ const Sidebar: React.FC = () => {
   const [selectedScreen, setSelectedScreen] = useState<string>("Products");
   const { logout } = useAuth();
   const navigate = useNavigate();
+
   const handleButtonClick = (screen: string) => {
     setSelectedScreen(screen);
   };
+
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
+
+  const buttons = [
+    { title: "Productos", screen: "Products" },
+    { title: "Ventas", screen: "Sales" },
+    { title: "Citas", screen: "Appointments" },
+    { title: "Historial", screen: "Record" },
+    { title: "Clientes", screen: "Clients" },
+  ];
 
   return (
     <div className="flex">
@@ -29,31 +39,14 @@ const Sidebar: React.FC = () => {
           />
         </div>
         <div className="space-y-7 flex flex-col items-center">
-          <Button
-            buttonType="secondary"
-            title="Productos"
-            onClick={() => handleButtonClick("Products")}
-          />
-          <Button
-            buttonType="secondary"
-            title="Ventas"
-            onClick={() => handleButtonClick("Sales")}
-          />
-          <Button
-            buttonType="secondary"
-            title="Citas"
-            onClick={() => handleButtonClick("Appointments")}
-          />
-          <Button
-            buttonType="secondary"
-            title="Historial"
-            onClick={() => handleButtonClick("Record")}
-          />
-          <Button
-            buttonType="secondary"
-            title="Clientes"
-            onClick={() => handleButtonClick("Clients")}
-          />
+          {buttons.map(({ title, screen }) => (
+            <Button
+              key={screen}
+              buttonType={selectedScreen === screen ? "accent" : "secondary"}
+              title={title}
+              onClick={() => handleButtonClick(screen)}
+            />
+          ))}
         </div>
       </div>
       <ContentSwitcher selectedScreen={selectedScreen} />
