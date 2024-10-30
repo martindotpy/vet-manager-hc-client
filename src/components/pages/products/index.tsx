@@ -2,12 +2,7 @@ import React, { useState } from "react";
 import Button from "../../atoms/button";
 import {
   Box,
-  colors,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Paper,
@@ -19,10 +14,9 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography,
 } from "@mui/material";
-import { Close } from "@mui/icons-material";
 
+import ProductModal from "../../molecules/product-modal";
 interface Product {
   id: number;
   name: string;
@@ -31,21 +25,34 @@ interface Product {
   category: string;
   description?: string;
 }
+const initialProducts: Product[] = [
+  { id: 1, name: "Producto A", price: 18.2, stock: 5, category: "Categoria 1" },
+  { id: 2, name: "Producto B", price: 20.0, stock: 8, category: "Categoria 2" },
+  { id: 3, name: "Producto C", price: 22.5, stock: 3, category: "Categoria 3", description: "Descripcion del producto C" },
+];
 
 export default function ProductsPage() {
-  const [products] = useState<Product[]>([
-    {
-      id: 1,
-      name: "Producto asdasd",
-      price: 18.2,
-      stock: 5,
-      category: "Categoria",
-    },
-    { id: 2, name: "Producto", price: 18.2, stock: 5, category: "Categoria" },
-    { id: 3, name: "Producto", price: 18.2, stock: 5, category: "Categoria" },
-  ]);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("categoria1");
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const openModal = (product: Product | null) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
+  const handleSaveProduct = (product: Product) => {
+    if (product.id) {
+      setProducts((prevProducts) =>
+        prevProducts.map((p) => (p.id === product.id ? product : p))
+      );
+    } else {
+      setProducts([...products, { ...product, id: products.length + 1 }]);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,7 +86,11 @@ export default function ProductsPage() {
             </FormControl>
           </div>
         </div>
-        <Button title="Nuevo Producto" buttonType="accent" onClick={() => setIsModalOpen(true)} />
+        <Button
+          title="Nuevo Producto"
+          buttonType="accent"
+          onClick={() => openModal(null)}
+        />
       </div>
       <TableContainer component={Paper}>
         <Table>
@@ -104,7 +115,7 @@ export default function ProductsPage() {
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>{product.category}</TableCell>
                 <TableCell>
-                  <Button title="Editar" buttonType="accent" />
+                  <Button title="Editar" buttonType="accent" onClick={() => openModal(product)} />
                 </TableCell>
               </TableRow>
             ))}
@@ -112,68 +123,12 @@ export default function ProductsPage() {
         </Table>
       </TableContainer>
 
-      <Dialog
+      <ProductModal
         open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle sx={{ m: 0, p: 2 }}>
-          Nuevo Producto
-          <IconButton
-            onClick={() => setIsModalOpen(false)}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-            }}
-          >
-            <Close />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}
-          >
-            <TextField label="Nombre" name="nombre" required fullWidth />
-            <FormControl fullWidth>
-              <InputLabel>Categoría</InputLabel>
-              <Select label="Categoría" name="categoria" defaultValue="">
-                <MenuItem value="categoria1">Categoria 1</MenuItem>
-                <MenuItem value="categoria2">Categoria 2</MenuItem>
-                <MenuItem value="categoria3">Categoria 3</MenuItem>
-              </Select>
-            </FormControl>
-            <TextField
-              label="Precio"
-              name="precio"
-              type="number"
-              inputProps={{ step: "0.01" }}
-              required
-              fullWidth
-            />
-            <TextField
-              label="Descripción"
-              name="descripcion"
-              multiline
-              rows={4}
-              fullWidth
-            />
-            <TextField
-              label="Stock"
-              name="stock"
-              type="number"
-              required
-              fullWidth
-            />
-            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-              <Button title="Guardar" buttonType="accent" />
-            </Box>
-          </Box>
-        </DialogContent>
-      </Dialog>
+        onClose={closeModal}
+        product={selectedProduct}
+        onSave={handleSaveProduct}
+      />
     </div>
   );
 }
