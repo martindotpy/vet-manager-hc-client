@@ -58,7 +58,7 @@ export default function ProductsPage() {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <TextField
               size="small"
-              placeholder="Buscar por nombre..."
+              placeholder="Ingrese nombre..."
               sx={{ width: "240px" }}
             />
           </Box>
