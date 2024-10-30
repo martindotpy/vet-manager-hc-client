@@ -23,10 +23,10 @@ const Sidebar: React.FC = () => {
         <div className="mb-12">
           <Logo logoType="secondary" title="" />
           <Button
-          buttonType='primary'
-          title="Cerrar sesión"
-          onClick={handleLogout}
-        />
+            buttonType="primary"
+            title="Cerrar sesión"
+            onClick={handleLogout}
+          />
         </div>
         <div className="space-y-7 flex flex-col items-center">
           <Button
@@ -48,6 +48,11 @@ const Sidebar: React.FC = () => {
             buttonType="secondary"
             title="Historial"
             onClick={() => handleButtonClick("Record")}
+          />
+          <Button
+            buttonType="secondary"
+            title="Clientes"
+            onClick={() => handleButtonClick("Clients")}
           />
         </div>
       </div>
