@@ -22,6 +22,7 @@ import {
   TableRow,
   TextField,
   Typography,
+  Grid,
 } from "@mui/material";
 
 
@@ -238,14 +239,19 @@ export default function SalesPage() {
         </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Typography variant="h6">ID Venta</Typography>
-            <Typography variant="body1">12345</Typography>
-            <Typography variant="h6">ID Cliente</Typography>
-            <Typography variant="body1">67890</Typography>
-            <Typography variant="h6">Nombre Cliente</Typography>
-            <Typography variant="body1">Joge</Typography>
-            <Typography variant="h6">Fecha Creado</Typography>
-            <Typography variant="body1">2021-10-10</Typography>
+
+            {Sales.map((sales) => (
+              <Grid container key={sales.id_sale} spacing={2}>
+                <Grid item xs={6}>
+                  <Typography variant="h6">ID Venta: {sales.id_sale}</Typography>
+                  <Typography variant="h6">ID Cliente: {sales.id_client}</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="h6">Nombre Cliente: {sales.name_client}</Typography>
+                  <Typography variant="h6">Fecha Creado: {sales.created_at}</Typography>
+                </Grid>
+              </Grid>
+            ))}
 
             <Table>
               <TableHead>
