@@ -10,7 +10,7 @@ import AuthTemplate from "./components/pages/auth/index.tsx";
 const router = createHashRouter([
   {
     path: "/login",
-    element: <Principal />,
+    element: <LoginForm />,
   },
   {
     path: "/",
