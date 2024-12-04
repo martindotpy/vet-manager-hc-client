@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../../atoms/button";
 import {
   Box,
@@ -15,49 +15,48 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-
 import ProductModal from "../../molecules/product-modal";
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  stock: number;
-  category: string;
-  description?: string;
-}
-const initialProducts: Product[] = [
-  { id: 1, name: "Producto A", price: 18.2, stock: 5, category: "Categoria 1" },
-  { id: 2, name: "Producto B", price: 20.0, stock: 8, category: "Categoria 2" },
-  { id: 3, name: "Producto C", price: 22.5, stock: 3, category: "Categoria 3", description: "Descripcion del producto C" },
-];
+import { useProduct } from "../../../hooks/useProduct";
+import { ProductResponseEntity } from "../../../types";
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const {
+    products,
+    isLoading,
+    error,
+    fetchProducts,
+    addProduct,
+    editProduct,
+    removeProduct,
+  } = useProduct();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("categoria1");
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const openModal = (product: Product | null) => {
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState<ProductResponseEntity | null>(null);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const openModal = (product: ProductResponseEntity | null) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
   };
+
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedProduct(null);
   };
-  const handleSaveProduct = (product: Product) => {
-    if (product.id) {
-      setProducts((prevProducts) =>
-        prevProducts.map((p) => (p.id === product.id ? product : p))
-      );
+
+  const handleSaveProduct = async (product: Omit<ProductResponseEntity, "id" | "updated_at">) => {
+    if (selectedProduct) {
+      await editProduct(selectedProduct.id, product);
     } else {
-      setProducts([...products, { ...product, id: products.length + 1 }]);
+      await addProduct(product);
     }
+    closeModal();
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsModalOpen(false);
-  };
   return (
     <div className="w-full m-4 bg-secondary rounded-xl p-4 font-roboto">
       <div className="flex gap-2 items-center justify-between mb-3">
@@ -100,25 +99,34 @@ export default function ProductsPage() {
               <TableCell sx={{ color: "white" }}>Nombre</TableCell>
               <TableCell sx={{ color: "white" }}>Precio</TableCell>
               <TableCell sx={{ color: "white" }}>Stock</TableCell>
-              <TableCell sx={{ color: "white" }}>Categoria</TableCell>
               <TableCell sx={{ color: "white", width: "100px" }}>
                 Acciones
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>{product.id}</TableCell>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.price}</TableCell>
-                <TableCell>{product.stock}</TableCell>
-                <TableCell>{product.category}</TableCell>
-                <TableCell>
-                  <Button title="Editar" buttonType="accent" onClick={() => openModal(product)} />
-                </TableCell>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={6}>Cargando...</TableCell>
               </TableRow>
-            ))}
+            ) : error ? (
+              <TableRow>
+                <TableCell colSpan={6}>Error: {error}</TableCell>
+              </TableRow>
+            ) : (
+              products.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell>{product.id}</TableCell>
+                  <TableCell>{product.name}</TableCell>
+                  <TableCell>{product.price}</TableCell>
+                  <TableCell>{product.quantity}</TableCell>
+                  <TableCell>
+                    <Button title="Editar" buttonType="accent" onClick={() => openModal(product)} />
+                    <Button title="Eliminar" buttonType="accent" onClick={() => removeProduct(product.id)} />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>

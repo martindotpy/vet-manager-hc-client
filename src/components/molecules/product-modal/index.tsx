@@ -13,43 +13,36 @@ import {
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import Button from "../../atoms/button";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  stock: number;
-  category: string;
-  description?: string;
-}
+import { ProductResponseEntity } from "../../../types";
 
 interface ProductModalProps {
   open: boolean;
   onClose: () => void;
-  product?: Product | null;
-  onSave: (product: Product) => void;
+  product?: ProductResponseEntity | null;
+  onSave: (product: Omit<ProductResponseEntity, "id" | "updated_at">) => void;
 }
 
 const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, product, onSave }) => {
-  const [formData, setFormData] = React.useState<Product>({
-    id: product?.id || 0,
+  const [formData, setFormData] = React.useState<Omit<ProductResponseEntity, "id" | "updated_at">>({
     name: product?.name || "",
     price: product?.price || 0,
-    stock: product?.stock || 0,
-    category: product?.category || "",
+    quantity: product?.quantity || 0,
     description: product?.description || "",
   });
 
   React.useEffect(() => {
     if (product) {
-      setFormData(product);
+      setFormData({
+        name: product.name,
+        price: product.price,
+        quantity: product.quantity,
+        description: product.description,
+      });
     } else {
       setFormData({
-        id: 0,
         name: "",
         price: 0,
-        stock: 0,
-        category: "",
+        quantity: 0,
         description: "",
       });
     }
@@ -98,19 +91,6 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, product, onS
             required
             fullWidth
           />
-          <FormControl fullWidth>
-            <InputLabel>Categoría</InputLabel>
-            <Select
-              label="Categoría"
-              name="category"
-              value={formData.category}
-              required
-            >
-              <MenuItem value="categoria1">Categoria 1</MenuItem>
-              <MenuItem value="categoria2">Categoria 2</MenuItem>
-              <MenuItem value="categoria3">Categoria 3</MenuItem>
-            </Select>
-          </FormControl>
           <TextField
             label="Precio"
             name="price"
@@ -132,8 +112,8 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, product, onS
           />
           <TextField
             label="Stock"
-            name="stock"
-            value={formData.stock}
+            name="quantity"
+            value={formData.quantity}
             onChange={handleInputChange}
             type="number"
             required
