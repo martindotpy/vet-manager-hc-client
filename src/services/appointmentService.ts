@@ -46,24 +46,6 @@ export async function createAppointment({
     patient_id,
   });
 }
-export async function createAppointmentDetails({
-  appointment_id,
-  appointment_type_id,
-  duration_in_minutes,
-  price,
-}: {
-  appointment_id: number;
-  appointment_type_id: number;
-  duration_in_minutes: number;
-  price: number;
-}): Promise<void> {
-  await apiClient.post(`/appointment/${appointment_id}/details`, {
-    appointment_id,
-    appointment_type_id,
-    duration_in_minutes,
-    price,
-  });
-}
 
 export async function updateAppointment({
   id,
@@ -85,4 +67,91 @@ export async function updateAppointment({
 
 export async function deleteAppointment({ id }: { id: number }): Promise<void> {
   await apiClient.delete(`/appointment/${id}`);
+}
+
+export async function createAppointmentDetails({
+  appointment_id,
+  appointment_type_id,
+  duration_in_minutes,
+  price,
+}: {
+  appointment_id: number;
+  appointment_type_id: number;
+  duration_in_minutes: number;
+  price: number;
+}): Promise<void> {
+  await apiClient.post(`/appointment/${appointment_id}/details`, {
+    appointment_id,
+    appointment_type_id,
+    duration_in_minutes,
+    price,
+  });
+}
+export async function updateAppointmentDetails({
+  id,
+  appointment_type_id,
+  duration_in_minutes,
+  price,
+}: {
+  id: number;
+  appointment_type_id: number;
+  duration_in_minutes: number;
+  price: number;
+}): Promise<void> {
+  await apiClient.put(`/appointment/details/${id}`, {
+    appointment_type_id,
+    duration_in_minutes,
+    price,
+  });
+}
+
+export async function deleteAppointmentDetails({
+  id,
+}: {
+  id: number;
+}): Promise<void> {
+  await apiClient.delete(`/appointment/details/${id}`);
+}
+
+export async function getAllAppointmentTypes(): Promise<AppointmentTypeAllResponse> {
+  const response = await apiClient.get(`/appointment/type`);
+  return response.data;
+}
+
+export async function createAppointmentType({
+  name,
+  duration_in_minutes,
+  price,
+}: {
+  name: string;
+  duration_in_minutes: number;
+  price: number;
+}): Promise<void> {
+  await apiClient.post(`/appointment/type`, {
+    name,
+    duration_in_minutes,
+    price,
+  });
+}
+
+export async function updateAppointmentType({
+  id,
+  name,
+  duration_in_minutes,
+  price,
+}: {
+  id: number;
+  name: string;
+  duration_in_minutes: number;
+  price: number;
+}): Promise<void> {
+  await apiClient.put(`/appointment/type/${id}`, {
+    name,
+    duration_in_minutes,
+    price,
+  });
+}
+
+export async function deleteAppointmentType({ id }: { id: number }): Promise<void> {
+  await apiClient.delete(`/appointment/type/${id}`);
 }
