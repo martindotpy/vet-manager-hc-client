@@ -99,3 +99,17 @@ export type AppointmentResponseEntity = {
   pacient: PacientResponseEntity;
   vet: UserResponseEntity;
 };
+
+export type ProductResponseEntity = {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  quantity: number;
+  updated_at: string;
+};
+
+export type CategoryResponseEntity = {
+  id: number;
+  name: string;
+};
