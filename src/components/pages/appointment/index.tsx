@@ -52,20 +52,20 @@ return (
       <div className="p-4 border-t border-gray-200 flex justify-between items-center">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="px-4 py-2 bg-[#2B579A] text-white rounded hover:bg-[#1E3F7D] transition-colors"
+          className="px-4 py-2 bg-primary text-white rounded hover:bg-accent transition-colors"
         >
           Agregar cita
         </button>
         <div className="flex gap-2">
           <button
             onClick={handlePrevWeek}
-            className="p-2 rounded-lg bg-[#2B579A] text-white hover:bg-[#1E3F7D] transition-colors"
+            className="p-2 rounded-lg bg-primary text-white hover:bg-accent transition-colors"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={handleNextWeek}
-            className="p-2 rounded-lg bg-[#2B579A] text-white hover:bg-[#1E3F7D] transition-colors"
+            className="p-2 rounded-lg bg-primary text-white hover:bg-accent transition-colors"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
