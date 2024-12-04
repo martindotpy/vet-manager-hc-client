@@ -70,7 +70,7 @@ export type PacientResponseEntity = {
   age: number;
   characteristics: string;
   deceased: boolean;
-  gender: "MALE" | "FAMELE";
+  gender: "MALE" | "FEMALE";
   owner: OwnerResponseEntity;
   race: RaceResponseEntity;
   vaccines: VaccineResponseEntity[];
