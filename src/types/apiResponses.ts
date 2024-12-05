@@ -3,6 +3,7 @@ import {
   AppointmentResponseEntity,
   ProductResponseEntity,
   CategoryResponseEntity,
+  OwnerResponseEntity,
 } from "./apiResponseEntities";
 
 // GET /api/v0/appointment
@@ -46,4 +47,20 @@ export type SingleProductResponse = {
 export type CategoryListResponse = {
   message: string;
   content: CategoryResponseEntity[];
+};
+
+// GET /api/v0/client
+export type ClientAllResponse = {
+  page: number;
+  size: number;
+  total_pages: number;
+  total_elements: number;
+  message: string;
+  content: OwnerResponseEntity[];
+};
+
+//GET /api/v0/client/{id}
+export type ClientOneResponse = {
+  message: string;
+  content: OwnerResponseEntity;
 };
