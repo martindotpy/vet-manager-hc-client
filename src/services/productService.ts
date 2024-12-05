@@ -1,9 +1,5 @@
 import apiClient from "../client/apiClient";
-import {
-  ProductListResponse,
-  SingleProductResponse,
-  ProductResponseEntity,
-} from "../types";
+import { ProductListResponse, SingleProductResponse, ProductResponseEntity } from "../types";
 
 export async function getAllProducts({
   page,
@@ -13,7 +9,7 @@ export async function getAllProducts({
   size: number;
 }): Promise<ProductListResponse> {
   const response = await apiClient.get(`/product`, {
-    params: { page, size },
+    params: { page: page > 0 ? page : 1, size },
   });
   return response.data;
 }
@@ -30,7 +26,7 @@ export async function getProductById({
 export async function createProduct(
   product: Omit<ProductResponseEntity, "id" | "updated_at">
 ): Promise<SingleProductResponse> {
-  const response = await apiClient.post(`/product`, product);
+  const response = await apiClient.post(`/api/product`, product);
   return response.data;
 }
 
