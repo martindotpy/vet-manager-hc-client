@@ -109,8 +109,9 @@ export async function deleteAppointmentDetails({
   id,
 }: {
   id: number;
-}): Promise<void> {
-  await apiClient.delete(`/appointment/details/${id}`);
+}): Promise<{message:string}> {
+  const response = await apiClient.delete(`/appointment/details/${id}`);
+  return response.data;
 }
 
 export async function getAllAppointmentTypes(): Promise<AppointmentTypeAllResponse> {

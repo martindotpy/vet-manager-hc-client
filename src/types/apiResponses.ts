@@ -4,6 +4,7 @@ import {
   ProductResponseEntity,
   CategoryResponseEntity,
   OwnerResponseEntity,
+  PatientResponseEntity,
 } from "./apiResponseEntities";
 
 // GET /api/v0/appointment
@@ -64,3 +65,19 @@ export type ClientOneResponse = {
   message: string;
   content: OwnerResponseEntity;
 };
+
+//GET /api/v0/patient
+export type PatientAllResponse ={
+  page: number;
+  size: number;
+  total_pages: number;
+  total_elements: number;
+  message: string;
+  content: PatientResponseEntity[];
+}
+
+//GET /api/v0/patient/{id}
+export type PatientOneResponse = {
+  message: string;
+  content: PatientResponseEntity;
+}

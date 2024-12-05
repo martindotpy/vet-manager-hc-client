@@ -63,7 +63,7 @@ export type RaceResponseEntity = {
   species: SpeciesResponseEntity;
 };
 
-export type PacientResponseEntity = {
+export type PatientResponseEntity = {
   id: number;
   name: string;
   birth_date: string;
@@ -96,7 +96,7 @@ export type AppointmentResponseEntity = {
     price: number;
     type: AppointementResponseType;
   }[];
-  pacient: PacientResponseEntity;
+  patient: PatientResponseEntity;
   vet: UserResponseEntity;
 };
 
