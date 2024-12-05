@@ -1,5 +1,9 @@
 import apiClient from "../client/apiClient";
-import { ClientAllResponse, ClientOneResponse, OwnerResponseEntity } from "../types";
+import {
+  ClientAllResponse,
+  ClientOneResponse,
+  OwnerResponseEntity,
+} from "../types";
 
 export async function getAllClients({
   page,
@@ -31,11 +35,16 @@ export async function createClient(
 export async function updateClient(
   id: number,
   client: Omit<OwnerResponseEntity, "id">
-): Promise<ClientOneResponse> {
+): Promise<OwnerResponseEntity> {
   const response = await apiClient.put(`/client/${id}`, client);
   return response.data.content;
 }
 
-export async function deleteClient(id: number): Promise<void> {
-  await apiClient.delete(`/client/${id}`);
+export async function deleteClient(id: number): Promise<{ message: string }> {
+  const response = await apiClient.delete(`/client/${id}`);
+  return response.data;
+}
+
+export async function generateClientExcel(): Promise<void> {
+  await apiClient.get(`/client/excel`);
 }

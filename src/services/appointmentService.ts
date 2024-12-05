@@ -156,3 +156,6 @@ export async function updateAppointmentType({
 export async function deleteAppointmentType({ id }: { id: number }): Promise<void> {
   await apiClient.delete(`/appointment/type/${id}`);
 }
+ export async function generateAppointmentExcel(): Promise<void> {
+  await apiClient.get(`/appointment/excel`);
+}

@@ -128,3 +128,7 @@ export async function addVaccine({
   });
   return response.data;
 }
+
+export async function generatePatientExcel(): Promise<void> {
+  await apiClient.get(`/patient/excel`);
+}

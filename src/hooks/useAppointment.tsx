@@ -11,6 +11,7 @@ import {
   deleteAppointment,
   deleteAppointmentDetails,
   deleteAppointmentType,
+  generateAppointmentExcel,
   getAllAppointments,
   getAllAppointmentTypes,
   updateAppointment,
@@ -207,6 +208,15 @@ export function useAppointment() {
     }
   };
 
+  const handleAppointmentExcel = async () => {
+    try{
+      await generateAppointmentExcel();
+    } catch (err) {
+      setError("Error al generar el excel de citas");
+      console.error(err);
+    }
+  }
+
   useEffect(() => {
     fetchAppointments();
   }, []);
@@ -227,5 +237,6 @@ export function useAppointment() {
     handleCreateAppointmentType,
     handleUpdateAppointmentType,
     handleDeleteAppointmentType,
+    handleAppointmentExcel,
   };
 }
