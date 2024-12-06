@@ -38,7 +38,7 @@ export default function ClientsPage() {
 
   useEffect(() => {
     fetchClients();
-  },[]);
+  }, []);
 
   const filteredClients = clients.filter((client) => {
     if (selectSearchMethod === "nombre") {
@@ -56,17 +56,26 @@ export default function ClientsPage() {
     e.preventDefault();
 
     const clientData = {
+      id: editingClient?.id,
       first_name: editingClient.first_name,
       last_name: editingClient.last_name,
       identification: editingClient.identification,
       identification_type: editingClient.identification_type,
       address: editingClient.address,
+      emails: editingClient?.id ? editingClient.emails || [] : undefined,
+      phones: editingClient?.id ? editingClient.phones || [] : undefined,
     };
+    if (editingClient?.id) {
+      clientData.emails = editingClient.emails || [];
+      clientData.phones = editingClient.phones || [];
+    }
 
     if (editingClient?.id) {
       handleUpdateClient(editingClient.id, clientData);
+      fetchClients();
     } else {
       handleCreateClient(clientData);
+      fetchClients();
     }
 
     setIsModalOpen(false);
@@ -86,6 +95,7 @@ export default function ClientsPage() {
   const handleModalClose = () => {
     setIsModalOpen(false);
     setEditingClient(null);
+    fetchClients();
   };
 
   return (
@@ -167,7 +177,6 @@ export default function ClientsPage() {
         </Table>
       </TableContainer>
 
-      {/* Modal */}
       <Dialog open={isModalOpen} onClose={handleModalClose}>
         <DialogTitle>
           {editingClient ? "Editar Cliente" : "Agregar Cliente"}
@@ -245,6 +254,38 @@ export default function ClientsPage() {
               }
               required
             />
+            {editingClient?.id && (
+              <>
+                <TextField
+                  label="Email"
+                  fullWidth
+                  margin="dense"
+                  value={editingClient?.emails?.join(", ") || ""}
+                  onChange={(e) =>
+                    setEditingClient((prev: any) => ({
+                      ...prev,
+                      emails: e.target.value
+                        .split(",")
+                        .map((email: string) => email.trim()),
+                    }))
+                  }
+                />
+                <TextField
+                  label="Phones"
+                  fullWidth
+                  margin="dense"
+                  value={editingClient?.phones?.join(", ") || ""}
+                  onChange={(e) =>
+                    setEditingClient((prev: any) => ({
+                      ...prev,
+                      phones: e.target.value
+                        .split(",")
+                        .map((phone: string) => phone.trim()),
+                    }))
+                  }
+                />
+              </>
+            )}
             <div style={{ marginTop: "16px", textAlign: "right" }}>
               <button type="submit">
                 <Button title="Guardar" buttonType="accent" />
