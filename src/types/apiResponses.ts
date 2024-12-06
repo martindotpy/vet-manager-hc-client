@@ -84,7 +84,7 @@ export type PatientOneResponse = {
 }
 
 //GET /api/v0/bill
-export type BillListResponse = {
+export type BillAllResponse = {
   page: number;
   size: number;
   total_pages: number;
