@@ -32,7 +32,7 @@ export type UserResponseEntity = {
   first_name: string;
   last_name: string;
   email: string;
-  roles: "ADMIN"[]; // TODO: Add more roles
+  roles: ("ADMIN" | "USER" | "VET")[];
 };
 
 export type VaccineResponseEntity = {
@@ -112,4 +112,47 @@ export type ProductResponseEntity = {
 export type CategoryResponseEntity = {
   id: number;
   name: string;
+};
+
+
+export type AppointmentSaleResponseEntity = {
+  id: number;
+  price: number;
+  discount: number;
+  appointment: AppointmentResponseEntity;
+  seller: UserResponseEntity;
+};
+
+export type TreatmentSaleResponseEntity = {
+  id: number;
+  price: number;
+  discount: number;
+  treatment: TreatmentResponseEntity;
+  seller: UserResponseEntity;
+}
+
+export type ProductSaleResponseEntity = {
+  id: number;
+  price: number;
+  discount: number;
+  quantity: number;
+  product: ProductResponseEntity;
+  seller: UserResponseEntity;
+}
+
+export type BillResponseEntity = {
+  id: number;
+  total: number;
+  discount: number;
+  total_paid: number;
+  paid: boolean;
+  last_paid_date_time: string;
+  created_at: string;
+  updated_at: string;
+  created_by: UserResponseEntity;
+  updated_by: UserResponseEntity;
+  client: OwnerResponseEntity;
+  appointment_sales: AppointmentSaleResponseEntity[];
+  treatment_sales: TreatmentSaleResponseEntity[];
+  product_sales: ProductSaleResponseEntity[];
 };
