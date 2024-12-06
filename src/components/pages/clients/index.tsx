@@ -20,51 +20,88 @@ import {
 import { MenuItem } from "@mui/material";
 
 import Button from "../../atoms/button";
-import { useState } from "react";
-interface Client {
-  id: number;
-  first_name: string;
-  last_name: string;
-  identification: number;
-  identification_type: string;
-  address: string;
-}
-
+import { useEffect, useState } from "react";
+import { useClient } from "../../../hooks/useClient";
 export default function ClientsPage() {
-  const [clients] = useState<Client[]>([
-    {
-      id: 1,
-      first_name: "Juan",
-      last_name: "Perez",
-      identification: 74391223,
-      identification_type: "DNI",
-      address: "Calle 123",
-    },
-    {
-      id: 2,
-      first_name: "Maria",
-      last_name: "Lopez",
-      identification: 73495020,
-      identification_type: "DNI",
-      address: "Calle 456",
-    },
-  ]);
+  const {
+    clients,
+    fetchClients,
+    handleCreateClient,
+    handleUpdateClient,
+    handleDeleteClient,
+  } = useClient();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectSearchMethod, setSelectedSearchMethod] = useState("nombre");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [editingClient, setEditingClient] = useState<any>(null);
+
+  useEffect(() => {
+    fetchClients();
+  },[]);
+
+  const filteredClients = clients.filter((client) => {
+    if (selectSearchMethod === "nombre") {
+      return (
+        client.first_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        client.last_name?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    } else if (selectSearchMethod === "id") {
+      return client.id?.toString().includes(searchQuery);
+    }
+    return true;
+  });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const clientData = {
+      first_name: editingClient.first_name,
+      last_name: editingClient.last_name,
+      identification: editingClient.identification,
+      identification_type: editingClient.identification_type,
+      address: editingClient.address,
+    };
+
+    if (editingClient?.id) {
+      handleUpdateClient(editingClient.id, clientData);
+    } else {
+      handleCreateClient(clientData);
+    }
+
     setIsModalOpen(false);
+    setEditingClient(null);
+    fetchClients();
   };
+
+  const handleEdit = (client: any) => {
+    setEditingClient(client);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = (id: number) => {
+    handleDeleteClient(id);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setEditingClient(null);
+  };
+
   return (
-    <div id="clients-page" className="w-full m-4 bg-secondary rounded-xl p-4 font-roboto">
+    <div
+      id="clients-page"
+      className="w-full m-4 bg-secondary rounded-xl p-4 font-roboto"
+    >
       <div className="flex gap-2 items-center justify-between mb-3">
         <div className="flex gap-2 items-center">
           <Button title="Buscar" buttonType="accent" />
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <TextField
               size="small"
-              placeholder="Buscar por nombre..."
+              placeholder={`Buscar por ${selectSearchMethod}...`}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               sx={{ width: "240px" }}
             />
           </Box>
@@ -77,13 +114,13 @@ export default function ClientsPage() {
                 label="Seleccionar"
               >
                 <MenuItem value="nombre">Nombre de cliente</MenuItem>
-                <MenuItem value="id">id cliente</MenuItem>
+                <MenuItem value="id">ID del cliente</MenuItem>
               </Select>
             </FormControl>
           </div>
         </div>
         <Button
-          title="Nuevo Producto"
+          title="Agregar cliente"
           buttonType="accent"
           onClick={() => setIsModalOpen(true)}
         />
@@ -92,19 +129,19 @@ export default function ClientsPage() {
         <Table>
           <TableHead sx={{ bgcolor: "#2B579A" }}>
             <TableRow>
-              <TableCell sx={{ color: "white" }}>id_cliente</TableCell>
+              <TableCell sx={{ color: "white" }}>ID</TableCell>
               <TableCell sx={{ color: "white" }}>Nombres</TableCell>
               <TableCell sx={{ color: "white" }}>Apellidos</TableCell>
               <TableCell sx={{ color: "white" }}>Identificación</TableCell>
               <TableCell sx={{ color: "white" }}>Tipo</TableCell>
               <TableCell sx={{ color: "white" }}>Dirección</TableCell>
-              <TableCell sx={{ color: "white", width: "100px" }}>
+              <TableCell sx={{ color: "white", width: "150px" }}>
                 Acciones
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {clients.map((client) => (
+            {filteredClients.map((client) => (
               <TableRow key={client.id}>
                 <TableCell>{client.id}</TableCell>
                 <TableCell>{client.first_name}</TableCell>
@@ -113,13 +150,109 @@ export default function ClientsPage() {
                 <TableCell>{client.identification_type}</TableCell>
                 <TableCell>{client.address}</TableCell>
                 <TableCell>
-                  <Button title="Editar" buttonType="accent" />
+                  <Button
+                    title="Editar"
+                    buttonType="accent"
+                    onClick={() => handleEdit(client)}
+                  />
+                  <Button
+                    title="Eliminar"
+                    buttonType="secondary"
+                    onClick={() => handleDelete(client.id)}
+                  />
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Modal */}
+      <Dialog open={isModalOpen} onClose={handleModalClose}>
+        <DialogTitle>
+          {editingClient ? "Editar Cliente" : "Agregar Cliente"}
+          <IconButton
+            onClick={handleModalClose}
+            style={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Nombres"
+              fullWidth
+              margin="dense"
+              value={editingClient?.first_name || ""}
+              onChange={(e) =>
+                setEditingClient((prev: any) => ({
+                  ...prev,
+                  first_name: e.target.value,
+                }))
+              }
+              required
+            />
+            <TextField
+              label="Apellidos"
+              fullWidth
+              margin="dense"
+              value={editingClient?.last_name || ""}
+              onChange={(e) =>
+                setEditingClient((prev: any) => ({
+                  ...prev,
+                  last_name: e.target.value,
+                }))
+              }
+              required
+            />
+            <TextField
+              label="Identificación"
+              fullWidth
+              margin="dense"
+              value={editingClient?.identification || ""}
+              onChange={(e) =>
+                setEditingClient((prev: any) => ({
+                  ...prev,
+                  identification: e.target.value,
+                }))
+              }
+              required
+            />
+            <TextField
+              label="Tipo de Identificación"
+              fullWidth
+              margin="dense"
+              value={editingClient?.identification_type || ""}
+              onChange={(e) =>
+                setEditingClient((prev: any) => ({
+                  ...prev,
+                  identification_type: e.target.value,
+                }))
+              }
+              required
+            />
+            <TextField
+              label="Dirección"
+              fullWidth
+              margin="dense"
+              value={editingClient?.address || ""}
+              onChange={(e) =>
+                setEditingClient((prev: any) => ({
+                  ...prev,
+                  address: e.target.value,
+                }))
+              }
+              required
+            />
+            <div style={{ marginTop: "16px", textAlign: "right" }}>
+              <button type="submit">
+                <Button title="Guardar" buttonType="accent" />
+              </button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

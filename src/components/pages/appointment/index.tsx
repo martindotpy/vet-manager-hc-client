@@ -3,6 +3,7 @@ import AppointmentModal from "../../molecules/appointment-modal";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import WeeklyCalendar from "../../organisms/weeklyCalendar";
 import { useAppointment } from "../../../hooks/useAppointment";
+import { usePatient } from "../../../hooks/usePatient";
 export interface Appointment {
   id: string;
   patient: string;
@@ -12,10 +13,12 @@ export interface Appointment {
 }
 export default function AppointmentPage() {
   const { appointments, fetchAppointments, isLoading, error } = useAppointment();
+  const { patients, fetchPatients } = usePatient();
   const [transformedAppointments, setTransformedAppointments] = useState<Appointment[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [currentWeek, setCurrentWeek] = useState<Date>(new Date());
+  const { handleCreateAppointment } = useAppointment();
 
 
   useEffect(() => {
@@ -28,6 +31,7 @@ export default function AppointmentPage() {
     }));
     setTransformedAppointments(formattedAppointments);
   }, [appointments]);
+  
 
   const handleAddAppointment = (appointment: Appointment) => {
     setTransformedAppointments([...transformedAppointments, appointment]);
@@ -44,6 +48,18 @@ export default function AppointmentPage() {
     const newDate = new Date(currentWeek);
     newDate.setDate(currentWeek.getDate() + 7);
     setCurrentWeek(newDate);
+  };
+  const handleSave = async (appointment: Appointment) => {
+    try {
+      await handleCreateAppointment({
+        description: appointment.description,
+        start_at: appointment.start.toISOString(),
+        patient_id: parseInt(appointment.patient),
+      });
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error("Error creating appointment:", err);
+    }
   };
 
   return (
@@ -94,8 +110,9 @@ export default function AppointmentPage() {
       {isModalOpen && (
         <AppointmentModal
           onClose={() => setIsModalOpen(false)}
-          onSave={handleAddAppointment}
+          onSave={handleSave}
           initialDate={selectedDate}
+          patients={patients}
         />
       )}
     </div>
