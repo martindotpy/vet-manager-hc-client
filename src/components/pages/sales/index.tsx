@@ -89,7 +89,7 @@ export default function SalesPage() {
 
 
   return (
-    <div className="h-full w-full m-4 bg-secondary rounded-xl p-4 font-roboto">
+    <div id="sales-page" className="h-full w-full m-4 bg-secondary rounded-xl p-4 font-roboto">
       <div className="flex gap-2 items-center justify-between mb-3">
         <div className="flex gap-2 items-center">
           <Button title="Buscar" buttonType="accent" />

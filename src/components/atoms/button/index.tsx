@@ -1,12 +1,13 @@
 import React from "react";
 
 interface ButtonProps {
+  id?: string;
   title: string;
   buttonType: "primary" | "secondary" | "accent";
   onClick?: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ title, buttonType, onClick }) => {
+const Button: React.FC<ButtonProps> = ({ id, title, buttonType, onClick }) => {
   const baseClasses =
     "rounded-lg p-2 w-auto m-2 transition-transform ease-in-out delay-150";
   const primaryClasses =
@@ -23,7 +24,7 @@ const Button: React.FC<ButtonProps> = ({ title, buttonType, onClick }) => {
         : accentClasses;
 
   return (
-    <button className={`${baseClasses} ${buttonClasses}`} onClick={onClick}>
+    <button id={id} className={`${baseClasses} ${buttonClasses}`} onClick={onClick}>
       {title}
     </button>
   );

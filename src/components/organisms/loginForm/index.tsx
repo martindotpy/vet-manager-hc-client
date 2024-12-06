@@ -34,6 +34,7 @@ const LoginForm: React.FC = () => {
         <div>
           <p className="text-base text-black mb-1">Correo electrónico</p>
           <Input
+            id="email-input"
             inputType="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -42,12 +43,13 @@ const LoginForm: React.FC = () => {
         <div>
           <p className="text-base text-black mb-1 mt-2">Contraseña</p>
           <Input
+            id="password-input"
             inputType="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <Button title="Ingresar" buttonType="primary" onClick={handleLogin} />
+        <Button id="login-button" title="Ingresar" buttonType="primary" onClick={handleLogin} />
       </div>
     </div>
   );

@@ -47,7 +47,7 @@ export default function AppointmentPage() {
   };
 
   return (
-    <div className="p-6 w-full mx-auto">
+    <div id="appointments-page" className="p-6 w-full mx-auto">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white">Citas</h1>
         <h2 className="text-lg text-white">

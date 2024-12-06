@@ -26,7 +26,7 @@ export async function getProductById({
 export async function createProduct(
   product: Omit<ProductResponseEntity, "id" | "updated_at">
 ): Promise<SingleProductResponse> {
-  const response = await apiClient.post(`/api/product`, product);
+  const response = await apiClient.post(`/product`, product);
   return response.data;
 }
 

@@ -33,6 +33,7 @@ const Sidebar: React.FC = () => {
         <div className="mb-12">
           <Logo logoType="secondary" title="" />
           <Button
+            id="logout-button"
             buttonType="primary"
             title="Cerrar sesión"
             onClick={handleLogout}
@@ -42,6 +43,7 @@ const Sidebar: React.FC = () => {
           {buttons.map(({ title, screen }) => (
             <Button
               key={screen}
+              id={`${screen.toLowerCase()}-button`}
               buttonType={selectedScreen === screen ? "accent" : "secondary"}
               title={title}
               onClick={() => handleButtonClick(screen)}
