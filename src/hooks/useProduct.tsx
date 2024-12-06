@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   ProductListResponse,
   ProductResponseEntity,
@@ -16,7 +16,7 @@ export function useProduct() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchProducts = async ({ page = 0, size = 10 } = {}) => {
+  const fetchProducts = useCallback(async ({ page = 1, size = 10 } = {}) => {
     try {
       setIsLoading(true);
       const response: ProductListResponse = await getAllProducts({ page, size });
@@ -30,7 +30,7 @@ export function useProduct() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const fetchProductById = async (id: number) => {
     try {
@@ -48,9 +48,10 @@ export function useProduct() {
     }
   };
 
-  const addProduct = async (product: Omit<ProductResponseEntity, "id" | "updated_at">) => {
+  const addProduct = async (product: Omit<ProductResponseEntity, "id" | "updated_at"> & { category_ids: number[] }) => {
     try {
       setIsLoading(true);
+      console.log("Adding product:", product); // Log the request payload
       const response = await createProduct(product);
       setProducts((prevProducts) => [...prevProducts, response.content]);
     } catch (err) {
@@ -64,7 +65,7 @@ export function useProduct() {
     }
   };
 
-  const editProduct = async (id: number, product: Omit<ProductResponseEntity, "id" | "updated_at">) => {
+  const editProduct = async (id: number, product: Omit<ProductResponseEntity, "id" | "updated_at"> & { category_ids: number[] }) => {
     try {
       setIsLoading(true);
       const response = await updateProduct(id, product);
@@ -100,7 +101,7 @@ export function useProduct() {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   return {
     products,

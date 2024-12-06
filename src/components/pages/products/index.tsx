@@ -48,7 +48,7 @@ export default function ProductsPage() {
     setSelectedProduct(null);
   };
 
-  const handleSaveProduct = async (product: Omit<ProductResponseEntity, "id" | "updated_at">) => {
+  const handleSaveProduct = async (product: Omit<ProductResponseEntity, "id" | "updated_at"> & { category_ids: number[] }) => {
     if (selectedProduct) {
       await editProduct(selectedProduct.id, product);
     } else {

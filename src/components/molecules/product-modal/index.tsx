@@ -1,42 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Dialog,
   DialogContent,
   DialogTitle,
-  FormControl,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import Button from "../../atoms/button";
 import { ProductResponseEntity } from "../../../types";
+import { getAllCategories } from "../../../services/categoryService";
+import { CategoryResponseEntity } from "../../../types";
 
 interface ProductModalProps {
   open: boolean;
   onClose: () => void;
   product?: ProductResponseEntity | null;
-  onSave: (product: Omit<ProductResponseEntity, "id" | "updated_at">) => void;
+  onSave: (product: Omit<ProductResponseEntity, "id" | "updated_at"> & { category_ids: number[] }) => void;
 }
 
 const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, product, onSave }) => {
-  const [formData, setFormData] = React.useState<Omit<ProductResponseEntity, "id" | "updated_at">>({
+  const [formData, setFormData] = useState<Omit<ProductResponseEntity, "id" | "updated_at"> & { category_ids: number[] }>({
     name: product?.name || "",
     price: product?.price || 0,
     quantity: product?.quantity || 0,
     description: product?.description || "",
+    category_ids: [],
   });
 
-  React.useEffect(() => {
+  const [categories, setCategories] = useState<CategoryResponseEntity[]>([]);
+
+  useEffect(() => {
     if (product) {
       setFormData({
         name: product.name,
         price: product.price,
         quantity: product.quantity,
         description: product.description,
+        category_ids: [],
       });
     } else {
       setFormData({
@@ -44,15 +51,36 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, product, onS
         price: 0,
         quantity: 0,
         description: "",
+        category_ids: [],
       });
     }
   }, [product]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getAllCategories();
+        setCategories(response.content);
+      } catch (error) {
+        console.error("Failed to fetch categories", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name as string]: value,
+      [name as string]: name === "price" || name === "quantity" ? Number(value) : value,
+    }));
+  };
+
+  const handleCategoryChange = (e: SelectChangeEvent<number>) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      category_ids: [Number(e.target.value)],
     }));
   };
 
@@ -119,6 +147,21 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, product, onS
             required
             fullWidth
           />
+          <FormControl fullWidth>
+            <InputLabel>Categoria</InputLabel>
+            <Select
+              value={formData.category_ids[0] || ""}
+              onChange={handleCategoryChange}
+              label="Categoria"
+              required
+            >
+              {categories.map((category) => (
+                <MenuItem key={category.id} value={category.id}>
+                  {category.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
             <Button title="Guardar" buttonType="accent" />
           </Box>
