@@ -51,7 +51,7 @@ export function useProduct() {
   const addProduct = async (product: Omit<ProductResponseEntity, "id" | "updated_at"> & { category_ids: number[] }) => {
     try {
       setIsLoading(true);
-      console.log("Adding product:", product); // Log the request payload
+      console.log("Adding product:", product);
       const response = await createProduct(product);
       setProducts((prevProducts) => [...prevProducts, response.content]);
     } catch (err) {

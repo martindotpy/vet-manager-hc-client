@@ -107,6 +107,7 @@ export type ProductResponseEntity = {
   description: string;
   quantity: number;
   updated_at: string;
+  category_ids: number[];
 };
 
 export type CategoryResponseEntity = {

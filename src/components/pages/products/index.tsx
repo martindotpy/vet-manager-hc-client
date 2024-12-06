@@ -18,6 +18,8 @@ import {
 import ProductModal from "../../molecules/product-modal";
 import { useProduct } from "../../../hooks/useProduct";
 import { ProductResponseEntity } from "../../../types";
+import { getAllCategories } from "../../../services/categoryService";
+import { CategoryResponseEntity } from "../../../types";
 
 export default function ProductsPage() {
   const {
@@ -32,11 +34,44 @@ export default function ProductsPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState<ProductResponseEntity[]>([]);
+  const [categories, setCategories] = useState<CategoryResponseEntity[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductResponseEntity | null>(null);
 
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
+
+  useEffect(() => {
+    filterProducts();
+  }, [products, selectedCategory, searchTerm]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await getAllCategories();
+      setCategories(response.content);
+    } catch (error) {
+      console.error("Failed to fetch categories", error);
+    }
+  };
+
+  const filterProducts = () => {
+    let filtered = products;
+
+    if (selectedCategory) {
+      filtered = filtered.filter(product => product.category_ids?.includes(Number(selectedCategory)));
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredProducts(filtered);
+  };
 
   const openModal = (product: ProductResponseEntity | null) => {
     setSelectedProduct(product);
@@ -66,6 +101,8 @@ export default function ProductsPage() {
             <TextField
               size="small"
               placeholder="Ingrese nombre..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               sx={{ width: "240px" }}
             />
           </Box>
@@ -78,9 +115,11 @@ export default function ProductsPage() {
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 label="Seleccionar categoría"
               >
-                <MenuItem value="categoria1">Categoria 1</MenuItem>
-                <MenuItem value="categoria2">Categoria 2</MenuItem>
-                <MenuItem value="categoria3">Categoria 3</MenuItem>
+                {categories.map((category) => (
+                  <MenuItem key={category.id} value={category.id}>
+                    {category.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </div>
@@ -114,7 +153,7 @@ export default function ProductsPage() {
                 <TableCell colSpan={6}>Error: {error}</TableCell>
               </TableRow>
             ) : (
-              products.map((product) => (
+              filteredProducts.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell>{product.id}</TableCell>
                   <TableCell>{product.name}</TableCell>
