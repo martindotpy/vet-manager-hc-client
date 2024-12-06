@@ -6,6 +6,8 @@ import {
   OwnerResponseEntity,
   PatientResponseEntity,
   BillResponseEntity,
+  RaceResponseEntity,
+  SpeciesResponseEntity,
 } from "./apiResponseEntities";
 
 // GET /api/v0/appointment
@@ -81,6 +83,18 @@ export type PatientAllResponse ={
 export type PatientOneResponse = {
   message: string;
   content: PatientResponseEntity;
+}
+
+//GET /api/v0/patient/race
+export type racesAllResponse = {
+  message: string;
+  content: RaceResponseEntity[];
+}
+
+//GET /api/v0/patient/species
+export type speciesAllResponse = {
+  message: string;
+  content: SpeciesResponseEntity[];
 }
 
 //GET /api/v0/bill

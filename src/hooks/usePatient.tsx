@@ -1,28 +1,40 @@
 import { useEffect, useState } from "react";
 import {
-    MedicalHistoryResponseEntity,
-    MedicalRecordResponseEntity,
+  MedicalHistoryResponseEntity,
+  MedicalRecordResponseEntity,
   PatientAllResponse,
   PatientOneResponse,
   PatientResponseEntity,
+  RaceResponseEntity,
+  SpeciesResponseEntity,
   VaccineResponseEntity,
 } from "../types";
 import {
-    addMedicalHistory,
-    addMedicalRecord,
-    addVaccine,
+  addMedicalHistory,
+  addMedicalRecord,
+  addVaccine,
   createPatient,
+  createRace,
+  createSpecies,
   deleteMedicalHistory,
   deletePatient,
+  deleteRace,
+  deleteSpecies,
   getAllPatients,
+  getAllRaces,
+  getAllSpecies,
   getPatientById,
   updateMedicalHistory,
   updatePatient,
+  updateRace,
+  updateSpecies,
 } from "../services/patientService";
 
 export function usePatient() {
   const [patients, setPatients] = useState<PatientResponseEntity[]>([]);
   const [patient, setPatient] = useState<PatientResponseEntity | null>(null);
+  const [species, setSpecies] = useState<SpeciesResponseEntity[]>([]);
+  const [races, setRaces] = useState<RaceResponseEntity[]>([]);
 
   const [error, setError] = useState<string | null>(null);
 
@@ -172,25 +184,128 @@ export function usePatient() {
     }
   };
 
-  
-  
-
-  useEffect(() => {
-    fetchPatients();
-  }, []);
-
-  return {
-    patients,
-    patient,
-    error,
-    fetchPatients,
-    fetchPatientById,
-    handleCreatePatient,
-    handleUpdatePatient,
-    handleDeletePatient,
-    handleAddMedicalHistory,
-    handleUpdateMedicalHistory,
-    handleDeleteMedicalHistory,
-    handleAddMedicalRecord,
+  const fetchSpecies = async () => {
+    try {
+      const response = await getAllSpecies();
+      setSpecies(response);
+    } catch (err) {
+      setError("Error al cargar las especies");
+      console.error(err);
+    }
   };
+
+  const handleCreateSpecies = async (data: { name: string }) => {
+    try {
+      const newSpecies = await createSpecies(data);
+      setSpecies((prev) => [...prev, newSpecies]);
+      return newSpecies;
+    } catch (err) {
+      setError("Error al crear la especie");
+      console.error(err);
+      throw err;
+    }
+  };
+
+  const handleUpdateSpecies = async (id: number, data: { name: string }) => {
+    try {
+      const updatedSpecies = await updateSpecies(id, data);
+      setSpecies((prev) =>
+        prev.map((s) => (s.id === id ? updatedSpecies : s))
+      );
+      return updatedSpecies;
+    } catch (err) {
+      setError("Error al actualizar la especie");
+      console.error(err);
+      throw err;
+    }
+  };
+
+  const handleDeleteSpecies = async (id: number) => {
+    try {
+      await deleteSpecies(id);
+      setSpecies((prev) => prev.filter((s) => s.id !== id));
+    } catch (err) {
+      setError("Error al eliminar la especie");
+      console.error(err);
+      throw err;
+    }
+  };
+
+  const fetchRaces = async () => {
+    try {
+      const response = await getAllRaces();
+      setRaces(response.content);
+    } catch (err) {
+      setError("Error al cargar las razas");
+      console.error(err);
+    }
+
+    const handleCreateRace = async (data: { name: string; species_id: number }) => {
+      try {
+
+        const newRace = await createRace(data);
+        setRaces((prev) => [...prev, newRace]);
+        return newRace;
+      } catch (err) {
+        setError("Error al crear la raza");
+        console.error(err);
+        throw err;
+      }
+    };
+
+    const handleUpdateRace = async (id: number, data: { name: string; species_id: number }) => {
+      try {
+        const updatedRace = await updateRace(id, data);
+        setRaces((prev) =>
+          prev.map((r) => (r.id === id ? updatedRace : r))
+        );
+        return updatedRace;
+      } catch (err) {
+        setError("Error al actualizar la raza");
+        console.error(err);
+        throw err;
+      }
+    };
+
+    const handleDeleteRace = async (id: number) => {
+      try {
+        await deleteRace(id);
+        setRaces((prev) => prev.filter((r) => r.id !== id));
+      } catch (err) {
+        setError("Error al eliminar la raza");
+        console.error(err);
+        throw err;
+      }
+    };
+
+
+    useEffect(() => {
+      fetchPatients();
+      fetchSpecies();
+      fetchRaces();
+    }, []);
+
+    return {
+      patients,
+      patient,
+      error,
+      fetchPatients,
+      fetchPatientById,
+      handleCreatePatient,
+      handleUpdatePatient,
+      handleDeletePatient,
+      handleAddMedicalHistory,
+      handleUpdateMedicalHistory,
+      handleDeleteMedicalHistory,
+      handleAddMedicalRecord,
+      fetchRaces,
+      handleCreateRace,
+      handleUpdateRace,
+      handleDeleteRace,
+      fetchSpecies,
+      handleCreateSpecies,
+      handleUpdateSpecies,
+      handleDeleteSpecies,
+    };
+  }
 }

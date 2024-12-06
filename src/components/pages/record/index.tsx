@@ -149,7 +149,6 @@ export default function RecordPage() {
               label="Precio"
               name="precio"
               type="number"
-              inputProps={{ step: "0.01" }}
               required
               fullWidth
             />

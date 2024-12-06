@@ -5,6 +5,9 @@ import {
   PatientAllResponse,
   PatientOneResponse,
   PatientResponseEntity,
+  RaceResponseEntity,
+  racesAllResponse,
+  SpeciesResponseEntity,
   VaccineResponseEntity,
 } from "../types";
 
@@ -131,4 +134,47 @@ export async function addVaccine({
 
 export async function generatePatientExcel(): Promise<void> {
   await apiClient.get(`/patient/excel`);
+}
+
+export async function getAllRaces(): Promise<racesAllResponse>{
+  const response = await apiClient.get(`/patient/race`);
+  return response.data;
+}
+
+export async function createRace(data: { name: string; species_id: number }): Promise<RaceResponseEntity> {
+  const response = await apiClient.post<RaceResponseEntity>("/patient/race", data);
+  return response.data;
+}
+
+export async function updateRace(
+  id: number,
+  data: { name: string; species_id: number }
+): Promise<RaceResponseEntity> {
+  const response = await apiClient.put<RaceResponseEntity>(`/patient/race/${id}`, data);
+  return response.data;
+}
+
+export async function deleteRace(id: number): Promise<{ message: string }> {
+  const response = await apiClient.delete<{ message: string }>(`/patient/race/${id}`);
+  return response.data;
+}
+
+export async function getAllSpecies(): Promise<SpeciesResponseEntity[]> {
+  const response = await apiClient.get<SpeciesResponseEntity[]>("/patient/species");
+  return response.data;
+}
+
+export async function createSpecies(data: { name: string }): Promise<SpeciesResponseEntity> {
+  const response = await apiClient.post<SpeciesResponseEntity>("/patient/species", data);
+  return response.data;
+}
+
+export async function updateSpecies(id: number, data: { name: string }): Promise<SpeciesResponseEntity> {
+  const response = await apiClient.put<SpeciesResponseEntity>(`/patient/species/${id}`, data);
+  return response.data;
+}
+
+export async function deleteSpecies(id: number): Promise<{ message: string }> {
+  const response = await apiClient.delete<{ message: string }>(`/patient/species/${id}`);
+  return response.data;
 }
