@@ -26,7 +26,7 @@ export function usePatient() {
 
   const [error, setError] = useState<string | null>(null);
 
-  const fetchPatients = async ({ page = 0, size = 10 } = {}) => {
+  const fetchPatients = async ({ page = 1, size = 10 } = {}) => {
     try {
       const response: PatientAllResponse = await getAllPatients({ page, size });
       setPatients(response.content);

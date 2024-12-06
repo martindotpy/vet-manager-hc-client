@@ -16,7 +16,7 @@ export function useProduct() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchProducts = async ({ page = 0, size = 10 } = {}) => {
+  const fetchProducts = async ({ page = 1, size = 10 } = {}) => {
     try {
       setIsLoading(true);
       const response: ProductListResponse = await getAllProducts({ page, size });

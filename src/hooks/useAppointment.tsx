@@ -27,7 +27,7 @@ export function useAppointment() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAppointments = async ({ page = 0, size = 10 } = {}) => {
+  const fetchAppointments = async ({ page = 1, size = 10 } = {}) => {
     try {
       setIsLoading(true);
       const response: AppointmentAllResponse = await getAllAppointments({

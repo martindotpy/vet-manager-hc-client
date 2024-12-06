@@ -13,7 +13,7 @@ export function useClient() {
   const [client, setClient] = useState<OwnerResponseEntity | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchClients = async ({ page = 0, size = 10 } = {}) => {
+  const fetchClients = async ({ page = 1, size = 10 } = {}) => {
     try {
       const response: ClientAllResponse = await getAllClients({ page, size });
       setClients(response.content);
